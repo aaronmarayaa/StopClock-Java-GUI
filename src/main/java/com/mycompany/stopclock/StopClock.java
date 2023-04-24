@@ -4,7 +4,6 @@
  */
 package com.mycompany.stopclock;
 
-import javax.swing.JLabel;
 import javax.swing.Timer;
 
 /**
@@ -18,7 +17,11 @@ public class StopClock extends javax.swing.JFrame {
     
     public StopClock() {
         initComponents();
-        timeLabel = new JLabel(String.format("%02d:%02d", seconds / 60, seconds % 60));
+        timeLabel.setText(String.format("%02d:%02d", seconds / 60, seconds % 60));
+        
+        setTitle("Stop clock");
+        setResizable(false);
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -31,18 +34,19 @@ public class StopClock extends javax.swing.JFrame {
     private void initComponents() {
 
         timeLabel = new javax.swing.JLabel();
-        StartButton = new javax.swing.JButton();
+        startButton = new javax.swing.JButton();
         resetButton = new javax.swing.JButton();
         stopButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        timeLabel.setText("jLabel1");
+        timeLabel.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        timeLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
-        StartButton.setText("Start");
-        StartButton.addActionListener(new java.awt.event.ActionListener() {
+        startButton.setText("Start");
+        startButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                StartButtonActionPerformed(evt);
+                startButtonActionPerformed(evt);
             }
         });
 
@@ -65,45 +69,57 @@ public class StopClock extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGap(65, 65, 65)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(timeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(61, 61, 61)
-                        .addComponent(timeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(48, 48, 48)
-                        .addComponent(StartButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(startButton, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(resetButton, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(stopButton, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(72, Short.MAX_VALUE))
+                .addContainerGap(55, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(81, 81, 81)
+                .addGap(43, 43, 43)
                 .addComponent(timeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(StartButton, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(startButton, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(resetButton, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(stopButton, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void stopButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopButtonActionPerformed
-        // TODO add your handling code here:
+        if(timer != null && timer.isRunning()){
+            timer.stop();
+        }
     }//GEN-LAST:event_stopButtonActionPerformed
 
-    private void StartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StartButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_StartButtonActionPerformed
+    private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
+        if(timer == null || !timer.isRunning()){
+            timer = new Timer(1000, e -> {
+                if(seconds >= 0){
+                    seconds++;
+                    timeLabel.setText(String.format("%02d:%02d", seconds / 60, seconds % 60));
+                }
+            });
+            timer.start();
+        }
+    }//GEN-LAST:event_startButtonActionPerformed
 
     private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
-        // TODO add your handling code here:
+        if(timer != null){
+            timer.stop();
+            seconds = 0;
+            timeLabel.setText(String.format("%02d:%02d", seconds, seconds));
+        }
     }//GEN-LAST:event_resetButtonActionPerformed
 
     /**
@@ -142,8 +158,8 @@ public class StopClock extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton StartButton;
     private javax.swing.JButton resetButton;
+    private javax.swing.JButton startButton;
     private javax.swing.JButton stopButton;
     private javax.swing.JLabel timeLabel;
     // End of variables declaration//GEN-END:variables
